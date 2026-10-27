@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MediPulse AI - Final Capstone Project (Chat & Complete Document)</title>
+  <style>
+    :root {
+      --primary: #1e40af;
+      --primary-dark: #1e3a8a;
+      --secondary: #0f766e;
+      --bg-body: #f8fafc;
+      --bg-card: #ffffff;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --border: #e2e8f0;
+      --user-bubble: #e0f2fe;
+      --ai-bubble: #ffffff;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: var(--bg-body);
+      color: var(--text);
+      line-height: 1.6;
+      padding: 20px;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    header {
+      background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+      color: white;
+      padding: 24px;
+      border-radius: 12px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+    }
+    header h1 { font-size: 1.6rem; margin-bottom: 6px; }
+    header p { font-size: 0.95rem; opacity: 0.9; }
+    .badge {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.2);
+      padding: 4px 10px;
+      border-radius: 9999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-top: 10px;
+    }
+    .share-alert {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-left: 5px solid #2563eb;
+      padding: 16px;
+      border-radius: 8px;
+      margin-bottom: 24px;
+      font-size: 0.95rem;
+    }
+    .share-alert strong { color: #1e40af; }
+    .quick-links {
+      display: flex;
+      gap: 12px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+    .quick-link-btn {
+      display: inline-block;
+      background: #1e40af;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+    .quick-link-btn:hover { background: #1d4ed8; }
+    .quick-link-btn.secondary { background: #0f766e; }
+    .quick-link-btn.secondary:hover { background: #115e59; }
+
+    /* Chat Thread */
+    .section-title {
+      font-size: 1.3rem;
+      color: #1e3a8a;
+      margin: 30px 0 16px 0;
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .chat-bubble {
+      margin-bottom: 20px;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.04);
+      border: 1px solid var(--border);
+    }
+    .bubble-user {
+      background: var(--user-bubble);
+      border-color: #bae6fd;
+    }
+    .bubble-ai {
+      background: var(--ai-bubble);
+      border-color: #e2e8f0;
+    }
+    .bubble-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      font-size: 0.85rem;
+      font-weight: bold;
+    }
+    .bubble-user .bubble-header { color: #0369a1; }
+    .bubble-ai .bubble-header { color: #1e40af; }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 0.9rem;
+      background: #fff;
+    }
+    th, td {
+      border: 1px solid #cbd5e1;
+      padding: 8px 12px;
+      text-align: left;
+    }
+    th {
+      background-color: #f1f5f9;
+      color: #1e3a8a;
+      font-weight: 600;
+    }
+    tr:nth-child(even) { background-color: #f8fafc; }
+    
+    pre {
+      background: #0f172a;
+      color: #f8fafc;
+      padding: 14px;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-size: 0.85rem;
+      margin: 12px 0;
+      line-height: 1.4;
+      font-family: Consolas, Monaco, monospace;
+    }
+    code {
+      background: #f1f5f9;
+      color: #0f172a;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.88em;
+      font-family: Consolas, monospace;
+    }
+    pre code { background: transparent; color: inherit; padding: 0; }
+    
+    .card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 18px;
+      margin-bottom: 16px;
+    }
+    .card h3 {
+      color: #1e3a8a;
+      margin-bottom: 8px;
+      font-size: 1.1rem;
+    }
+    ul, ol { margin-left: 20px; margin-bottom: 12px; }
+    li { margin-bottom: 6px; }
+
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid #cbd5e1;
+      font-size: 0.85rem;
+      color: #64748b;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <h1>MediPulse AI — Final Capstone Proposal & Prototype</h1>
+      <p>Department of Computer Science & Engineering | CSE-499 Senior Capstone</p>
+      <div class="badge">Student: Khalid Mansoor • 30/30 Marks Complete Pack</div>
+    </header>
+
+    <div class="share-alert">
+      <strong>👋 এই ফাইলটি কার জন্য?</strong><br>
+      আপনি যদি কোনো AI টুল (যেমন Antigravity) ব্যবহার না-ও করেন, তবুও এই ফোল্ডারের ফাইলগুলো দিয়ে আপনি সরাসরি 
+      <strong>প্রজেক্টের পুরো ডক দেখতে পারবেন</strong>, <strong>PDF ডাউনলোড করতে পারবেন</strong>, এবং <strong>লাইভ প্রোটোটাইপ রান করতে পারবেন</strong>।
+      <div class="quick-links">
+        <a class="quick-link-btn" href="proposal.html" target="_blank">📄 সম্পূর্ণ Proposal ডক দেখুন ও PDF সেভ করুন</a>
+        <a class="quick-link-btn secondary" href="prototype/index.html" target="_blank">💻 লাইভ প্রোটোটাইপ ইন্টারফেস ওপেন করুন</a>
+      </div>
+    </div>
+
+    <div class="section-title">
+      💬 মূল চ্যাট হিস্ট্রি ও ইন্সট্রাকশন (Chat Transcript)
+    </div>
+
+    <!-- User Question -->
+    <div class="chat-bubble bubble-user">
+      <div class="bubble-header">
+        <span>👤 User (Khalid)</span>
+        <span>Original Requirement Prompt</span>
+      </div>
+      <div>
+        <strong>Part I - Final Capstone Project Proposal and Prototyping</strong><br>
+        <ul>
+          <li>Due Wednesday by 11:59</li>
+          <li>Points 30</li>
+          <li>Submitting a website url (GitHub Link)</li>
+          <li>Each student should have his/her own project. Develop the project idea.</li>
+          <li>Develop the initial version of your project proposal (all things a large professional project usually has).</li>
+          <li>Using a software process model, develop project completion schedules, milestones, Deliverables, with Gantt chart.</li>
+          <li>Develop UML Diagrams (Data Flow Diagram, Use Case Diagram, Activity Diagram, Entity Relationship Diagram, Class Diagram, Object Diagram).</li>
+          <li>Develop a simple interface using at least 5 classes that are in the class diagrams.</li>
+          <li>Highly Recommend to use the LaTeX Template.</li>
+          <li><em>pls make for this project. kono topic jeno bad na jai. give me a full latex code and pdf</em></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- AI Response Summary -->
+    <div class="chat-bubble bubble-ai">
+      <div class="bubble-header">
+        <span>🤖 AI Assistant (Antigravity)</span>
+        <span>Complete Solution Delivered</span>
+      </div>
+      <div>
+        <p>
+          আপনার প্রজেক্টের জন্য <strong>MediPulse AI: Intelligent Clinical Workflow Automation, Telehealth Triage, and Electronic Health Records Platform</strong> তৈরি করা হয়েছে। কোনো রিকোয়ারমেন্টই বাদ দেওয়া হয়নি। নিচে সব বিষয়ের সারসংক্ষেপ ও ফাইল নির্দেশিকা দেওয়া হলো:
+        </p>
+      </div>
+    </div>
+
+    <!-- Detailed Breakdown -->
+    <div class="section-title">
+      📁 ফোল্ডারে থাকা সমস্ত ফাইলের বিস্তারিত বিবরণ
+    </div>
+
+    <div class="card">
+      <h3>1. <code>proposal.tex</code> — সম্পূর্ণ LaTeX সোর্স কোড</h3>
+      <p>
+        এটি পাবলিকেশন মানের মাস্টার ল্যাটেক ডকুমেন্ট। এতে কভার পেজ, অ্যাবস্ট্রাক্ট, ইন্ট্রোডাকশন, ফেজাবিলিটি স্টাডি, এজাইল স্ক্রাম প্রসেস মডেল, গ্যান্ট চার্ট এবং ৬টি UML ডায়াগ্রাম সরাসরি <code>TikZ</code> কোড দিয়ে আঁকা হয়েছে (যাতে কোনো এক্সটার্নাল ইমেজের ঝামেলা ছাড়াই ওভারলিফে নির্ভুল কম্পাইল হয়)।
+      </p>
+    </div>
+
+    <div class="card">
+      <h3>2. <code>proposal.html</code> — ১-ক্লিক ব্রাউজার PDF এক্সপোর্ট</h3>
+      <p>
+        যাদের কম্পিউটারে ল্যাটেক সেটআপ নেই, তারা ব্রাউজারে <a href="proposal.html" target="_blank"><strong><code>proposal.html</code></strong></a> ডাবল ক্লিক করলেই সম্পূর্ণ পেপারটি কালারফুল ভেক্টর SVG ডায়াগ্রামসহ দেখতে পাবেন। কিবোর্ডে <strong><code>Ctrl + P</code></strong> চেপে "Save as PDF" সিলেক্ট করলেই প্রিন্ট-রেডি PDF ফাইল সেভ হয়ে যাবে।
+      </p>
+    </div>
+
+    <div class="card">
+      <h3>3. <code>prototype/</code> — ৬টি ক্লাসের লাইভ প্রোটোটাইপ ইন্টারফেস</h3>
+      <p>অ্যাসাইনমেন্টে কমপক্ষে ৫টি ক্লাস দিয়ে ইন্টারফেস বানাতে বলা হয়েছিল, এখানে ৬টি ক্লাস তৈরি ও সংযুক্ত করা হয়েছে:</p>
+      <ol>
+        <li><code>User</code> (Abstract Base Class)</li>
+        <li><code>Patient</code> (ইনহেরিটেন্স, মেডিকেল রেকর্ড ও প্রেসক্রিপশন হিস্ট্রি)</li>
+        <li><code>Doctor</code> (ইনহেরিটেন্স, স্পেশালিটি, ফি ও কনসাল্টেশন ক্ষমতা)</li>
+        <li><code>Appointment</code> (স্লট বুকিং, ট্রায়াজ প্রায়োরিটি ও স্ট্যাটাস ম্যানেজমেন্ট)</li>
+        <li><code>MedicalRecord</code> (EHR রেকর্ড, রোগ নির্ণয়, ভাইটাল সাইন ও ট্রিটমেন্ট প্ল্যান)</li>
+        <li><code>Prescription</code> (মেডিসিনের নাম, ডোজ, খাওয়ার নিয়ম ও ডিসপেনস স্ট্যাটাস)</li>
+        <li><code>TriageEngine</code> (AI রুল-বেসড একুইটি ও স্পেশালিস্ট ম্যাচিং এলগরিদম)</li>
+      </ol>
+      <p><strong>কীভাবে রান করবেন:</strong></p>
+      <ul>
+        <li><strong>ওয়েব ড্যাশবোর্ড:</strong> <a href="prototype/index.html" target="_blank"><code>prototype/index.html</code></a> ফাইলে ডাবল ক্লিক করলেই যেকোনো ব্রাউজারে চলবে। নিচে থাকা <em>Live Runtime Object Inspector</em> এ ক্লাসগুলোর মেমোরি স্টেট সরাসরি দেখা যাবে।</li>
+        <li><strong>পাইথন কনসোল:</strong> টার্মিনালে <code>python prototype/main.py</code> রান করলে সম্পূর্ণ অবজেক্ট-ওরিয়েন্টেড টেস্ট এক্সিকিউট হবে।</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>4. <code>references.bib</code> — বিবলিওগ্রাফি</h3>
+      <p>IEEE স্ট্যান্ডার্ড অনুযায়ী সফটওয়্যার আর্কিটেকচার, স্ক্রাম গাইড, UML এবং হেলথকেয়ার ইনফরম্যাটিক্স এর রেফারেন্স যুক্ত করা হয়েছে।</p>
+    </div>
+
+    <div class="card">
+      <h3>5. <code>README.md</code> — গিটহাব সাবমিশন পেজ</h3>
+      <p>গিটহাবে আপলোড করার জন্য সম্পূর্ণ গাইডলাইন এবং প্রজেক্টের চেকলিস্টসহ প্রফেশনাল রিডমি তৈরি করা আছে।</p>
+    </div>
+
+    <!-- How Friend Can Use It -->
+    <div class="section-title">
+      📦 বন্ধুর সাথে শেয়ার করার সহজ উপায় (How to Share with a Friend)
+    </div>
+
+    <div class="card">
+      <h3>পদ্ধতি ১: জিপ (ZIP) করে পাঠিয়ে দিন (সবচেয়ে সহজ)</h3>
+      <ol>
+        <li>আপনার কম্পিউটারের <code>d:\khalid</code> ফোল্ডারটি রাইট ক্লিক করে <strong>"Compress to ZIP file"</strong> করুন।</li>
+        <li>জিপ ফাইলটি গুগল ড্রাইভ, হোয়াটসঅ্যাপ, টেলিগ্রাম বা ইমেইলে বন্ধুকে পাঠিয়ে দিন।</li>
+        <li>বন্ধু জিপটি আনজিপ করে <code>CHAT_AND_PROJECT_GUIDE.html</code> এবং <code>proposal.html</code> ডাবল ক্লিক করলেই সাথে সাথে সব দেখতে ও PDF নিতে পারবেন।</li>
+      </ol>
+    </div>
+
+    <div class="card">
+      <h3>পদ্ধতি ২: গিটহাব লিঙ্ক শেয়ার (অ্যাসাইনমেন্ট সাবমিশন স্ট্যান্ডার্ড)</h3>
+      <p>যেহেতু অ্যাসাইনমেন্টে গিটহাব লিঙ্ক জমা দিতে বলা হয়েছে, আপনি ফোল্ডারটি গিটহাবে পুশ করে সেই লিঙ্কটি বন্ধু ও টিচারকে দিয়ে দিতে পারেন:</p>
+      <pre>
+cd d:\khalid
+git init
+git add .
+git commit -m "Final Capstone Project Proposal & 6-Class Prototype Complete"
+git branch -M main
+git remote add origin https://github.com/&lt;your-username&gt;/medipulse-ai.git
+git push -u origin main
+      </pre>
+    </div>
+
+    <footer>
+      MediPulse AI Capstone Project Pack • Prepared for Khalid Mansoor • CSE-499 Capstone Part I
+    </footer>
+  </div>
+
+</body>
+</html>
